@@ -25,7 +25,7 @@ SECRET_KEY = 'gibldk!qzi#)%^_5rpbso$#pu5q0z$&0_fpdfxg$7@6l*(6_l@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 LOGIN_URL = "/login"
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'tweets',
 ]
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -125,14 +127,52 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-root')
+
+
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
+CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',        # Essencial para o CSRF Token
+    'x-requested-with',   # Essencial para identificar requisições AJAX
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+]
+
 DEFAULT_RENDERER_CLASSES = [
     'rest_framework.renderers.JSONRenderer'
 ]
 
+DEFAULT_AUTHENTICATION_CLASSES = [
+    'rest_framework.authentication.SessionAuthentication'
+]
+
+
 if DEBUG:
     DEFAULT_RENDERER_CLASSES += [
     'rest_framework.renderers.BrowsableAPIRenderer'
-]
+    ]
+    DEFAULT_AUTHENTICATION_CLASSES += [
+    'chatter.rest_api.dev.DevAuthentication'
+    ]
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'],
