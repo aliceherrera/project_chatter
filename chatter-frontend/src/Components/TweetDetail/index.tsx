@@ -1,4 +1,6 @@
+import React from "react";
 import { useState } from "react";
+
 import ActionBtn from "../Button";
 import type { Tweet as TweetType } from "../BackendLookup";
 
@@ -39,6 +41,17 @@ const Tweet = (props: {
     ? props.className
     : "col-10 mx-auto col-md-6";
 
+  const handleLink = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    window.location.href = `/${tweet.id}`;
+  };
+
+  const path = window.location.pathname;
+  const match = path.match(/(?<tweetid>\d+)/);
+  const urlTweetId = match?.groups?.tweetid ?? -1;
+  // const urlTweetId = match ? match.groups.tweetid : -1;
+  const isDetail = `${tweet.id}` === `${urlTweetId}`;
+
   if (!actionTweet) {
     return null;
   }
@@ -51,25 +64,35 @@ const Tweet = (props: {
           <ParentTweet tweet={tweet} />
         </p>
       </div>
-      {actionTweet && !hideActions && (
-        <div className="btn btn-group">
-          <ActionBtn
-            tweet={actionTweet}
-            didPerformAction={handlerPerformAction}
-            action={{ type: "like", display: "Likes" }}
-          />
-          <ActionBtn
-            tweet={actionTweet}
-            didPerformAction={handlerPerformAction}
-            action={{ type: "unlike", display: "Unlike" }}
-          />
-          <ActionBtn
-            tweet={actionTweet}
-            didPerformAction={handlerPerformAction}
-            action={{ type: "retweet", display: "Retweets" }}
-          />
-        </div>
-      )}
+      <div className="btn btn-group">
+        {actionTweet && !hideActions && (
+          <React.Fragment>
+            <ActionBtn
+              tweet={actionTweet}
+              didPerformAction={handlerPerformAction}
+              action={{ type: "like", display: "Likes" }}
+            />
+            <ActionBtn
+              tweet={actionTweet}
+              didPerformAction={handlerPerformAction}
+              action={{ type: "unlike", display: "Unlike" }}
+            />
+            <ActionBtn
+              tweet={actionTweet}
+              didPerformAction={handlerPerformAction}
+              action={{ type: "retweet", display: "Retweets" }}
+            />
+          </React.Fragment>
+        )}
+        {!isDetail ? (
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={handleLink}
+          >
+            View
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 };

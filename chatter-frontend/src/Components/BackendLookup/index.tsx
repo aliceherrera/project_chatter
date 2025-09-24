@@ -47,12 +47,18 @@ export function backendLookup<T>(
   if (method !== "GET") {
     const csrftoken = getCookie("csrftoken");
     if (csrftoken) {
-      // xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
       xhr.setRequestHeader("X-CSRFToken", csrftoken);
     }
   }
   xhr.onload = function () {
+    if (xhr.status === 403 && xhr.response) {
+      const detail = xhr.response.detail;
+      if (detail === xhr.response.detail) {
+        window.location.href =
+          "http://localhost:8000/login?showLoginRequired=true";
+      }
+    }
     callback(xhr.response as T, xhr.status);
   };
   xhr.onerror = function () {

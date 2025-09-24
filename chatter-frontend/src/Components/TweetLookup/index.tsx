@@ -34,8 +34,20 @@ const apiTweetList = (
   backendLookup<Tweet[]>("GET", endpoint, callback);
 };
 
-const apiTweetDetail = (tweetId: string, callback: TweetsCallback) => {
-  backendLookup<Tweet[]>("GET", `/tweets/?username=${tweetId}`, callback);
+// const apiTweetDetail = (tweetId: string, callback: TweetsCallback) => {
+//   let endpoint = "/tweets/";
+//   if (tweetId) {
+//     endpoint = `/tweets/${tweetId}`;
+//   }
+//   backendLookup<Tweet[]>("GET", endpoint, callback);
+// };
+
+const apiTweetDetail = (
+  tweetId: string,
+  callback: (response: Tweet, status: number) => void
+) => {
+  const endpoint = `/tweets/${tweetId}`;
+  backendLookup<Tweet>("GET", endpoint, callback);
 };
 
 export { apiTweetCreate, apiTweetList, apiTweetAction, apiTweetDetail };
