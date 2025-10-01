@@ -3,6 +3,8 @@ import {
   type Tweet,
   type TweetCreateCallback,
   type TweetsCallback,
+  type TweetListCallback,
+  type TweetListResponse,
 } from "../BackendLookup";
 
 export type TweetAction = "like" | "unlike" | "retweet";
@@ -23,24 +25,28 @@ const apiTweetAction = (
   backendLookup<Tweet[]>("POST", "/tweets/action/", callback, data);
 };
 
+const apiTweetFeed = (callback: TweetListCallback, nextUrl?: string) => {
+  let endpoint = "/tweets/feed/";
+  if (nextUrl !== undefined && nextUrl !== null) {
+    endpoint = nextUrl.replace("http://localhost:8000/api", "");
+  }
+  backendLookup<TweetListResponse>("GET", endpoint, callback);
+};
+
 const apiTweetList = (
   username: string | undefined,
-  callback: TweetsCallback
+  callback: TweetListCallback,
+  nextUrl?: string
 ) => {
   let endpoint = "/tweets/";
   if (username) {
     endpoint = `/tweets/?username=${username}`;
   }
-  backendLookup<Tweet[]>("GET", endpoint, callback);
+  if (nextUrl !== undefined && nextUrl !== null) {
+    endpoint = nextUrl.replace("http://localhost:8000/api", "");
+  }
+  backendLookup<TweetListResponse>("GET", endpoint, callback);
 };
-
-// const apiTweetDetail = (tweetId: string, callback: TweetsCallback) => {
-//   let endpoint = "/tweets/";
-//   if (tweetId) {
-//     endpoint = `/tweets/${tweetId}`;
-//   }
-//   backendLookup<Tweet[]>("GET", endpoint, callback);
-// };
 
 const apiTweetDetail = (
   tweetId: string,
@@ -50,4 +56,10 @@ const apiTweetDetail = (
   backendLookup<Tweet>("GET", endpoint, callback);
 };
 
-export { apiTweetCreate, apiTweetList, apiTweetAction, apiTweetDetail };
+export {
+  apiTweetCreate,
+  apiTweetList,
+  apiTweetAction,
+  apiTweetDetail,
+  apiTweetFeed,
+};

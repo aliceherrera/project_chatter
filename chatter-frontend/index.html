@@ -13,8 +13,14 @@
     <title>Chatter</title>
   </head>
   <body>
-    <div id="tweet-container"></div>
-    <div id="chatter" data-username="aliceherrera" data-can-tweet="false"></div>
+    <div id="chatter-feed"></div>
+    <div class="d-none" id="tweet-container"></div>
+    <div
+      class="d-none"
+      id="chatter"
+      data-username="aliceherrera"
+      data-can-tweet="false"
+    ></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
       var path = window.location.pathname;

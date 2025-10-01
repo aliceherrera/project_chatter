@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if request.user.is_authenticated %}
+  <div id="chatter-feed"></div>
+{% else %}
+  <div id="chatter"></div>
+{% endif %}
+
+{% endblock content %}
