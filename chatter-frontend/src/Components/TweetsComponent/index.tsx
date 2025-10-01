@@ -4,6 +4,7 @@ import TweetsList from "../TweetsList";
 import { apiTweetDetail } from "../TweetLookup";
 import type { Tweet as TweetType } from "../BackendLookup";
 import Tweet from "../TweetDetail";
+import FeedList from "../FeedList";
 
 interface TweetsComponentProps {
   username?: string;
@@ -14,7 +15,6 @@ interface TweetsComponentProps {
 const TweetsComponent: React.FC<TweetsComponentProps> = (props) => {
   console.log("TweetsComponent RENDERIZOU com ID:", props.username);
   const [newTweets, setNewTweets] = useState<TweetType[]>([]);
-  // const canTweet = props.canTweet === "false" ? false : true;
   const { canTweet = true } = props;
   const handleNewTweet = (newTweet: TweetType): void => {
     const tempNewTweets = [...newTweets];
@@ -41,7 +41,6 @@ const TweetDetailComponent: React.FC<TweetDetailProps> = ({
   className,
 }) => {
   console.log("TweetDetailComponent RENDERIZOU com ID:", tweetId);
-  // const [didLookup, setDitLookup] = useState(false);
   const [tweet, setTweet] = useState<TweetType | null>(null);
 
   useEffect(() => {
@@ -61,5 +60,29 @@ const TweetDetailComponent: React.FC<TweetDetailProps> = ({
   return <Tweet tweet={tweet} className={className} />;
 };
 
-export { TweetDetailComponent };
+const FeedComponent: React.FC<TweetsComponentProps> = (props) => {
+  console.log("TweetsComponent RENDERIZOU com ID:", props.username);
+  const [newTweets, setNewTweets] = useState<TweetType[]>([]);
+  const { canTweet = true } = props;
+  const handleNewTweet = (newTweet: TweetType): void => {
+    const tempNewTweets = [...newTweets];
+    tempNewTweets.unshift(newTweet);
+    setNewTweets(tempNewTweets);
+  };
+  return (
+    <div className={props.className}>
+      {canTweet === true && (
+        <TweetCreate didTweet={handleNewTweet} className="col-12 mb-3" />
+      )}
+      <FeedList newTweets={newTweets} {...props} />
+    </div>
+  );
+};
+
+interface TweetDetailProps {
+  tweetId: string;
+  className?: string;
+}
+
+export { TweetDetailComponent, FeedComponent };
 export default TweetsComponent;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { type Tweet as TweetType } from "../BackendLookup";
 import { type TweetListResponse } from "../BackendLookup";
-import { apiTweetList } from "../TweetLookup";
+import { apiTweetFeed } from "../TweetLookup";
 import TweetDetail from "../TweetDetail";
 
 interface TweetsListProps {
@@ -9,15 +9,14 @@ interface TweetsListProps {
   username?: string;
 }
 
-const TweetsList: React.FC<TweetsListProps> = (props: TweetsListProps) => {
+const FeedList: React.FC<TweetsListProps> = (props: TweetsListProps) => {
   const [tweetsInit, setTweetsInit] = useState<TweetType[]>([]);
   const [tweets, setTweets] = useState<TweetType[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [tweetsDidSet, setTweetsDidSet] = useState<boolean>(false);
 
   useEffect(() => {
-    // const final = [...props.newTweets].concat(tweetsInit);
-    const final = [...props.newTweets, ...tweetsInit]; //para evitar loop infinito
+    const final = [...props.newTweets, ...tweetsInit];
     if (final.length !== tweets.length) {
       setTweets(final);
     }
@@ -37,16 +36,14 @@ const TweetsList: React.FC<TweetsListProps> = (props: TweetsListProps) => {
           alert("Ocorreu um erro");
         }
       };
-      apiTweetList(props.username, handleTweetListLookup);
+      apiTweetFeed(handleTweetListLookup);
     }
   }, [tweetsInit, tweetsDidSet, setTweetsDidSet, props.username]);
 
   const handleDidRetweet = (newTweet: TweetType): void => {
     const updateTweetsInit = [newTweet, ...tweetsInit];
-    // updateTweetsInit.unshift(newTweet);
     setTweetsInit(updateTweetsInit);
     const updateFinalTweets = [newTweet, ...tweets];
-    // updateFinalTweets.unshift(tweets); //bug: adicionava o array inteiro dentro de si mesmo.
     setTweets(updateFinalTweets);
   };
 
@@ -66,7 +63,7 @@ const TweetsList: React.FC<TweetsListProps> = (props: TweetsListProps) => {
           alert("Ocorreu um erro");
         }
       };
-      apiTweetList(props.username, handleLoadMoreResponse, nextUrl);
+      apiTweetFeed(handleLoadMoreResponse, nextUrl);
     }
   };
 
@@ -89,4 +86,4 @@ const TweetsList: React.FC<TweetsListProps> = (props: TweetsListProps) => {
   );
 };
 
-export default TweetsList;
+export default FeedList;

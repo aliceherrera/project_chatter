@@ -6,9 +6,26 @@ export interface Tweet {
   is_retweet: boolean;
   userLike: boolean;
   parent: Tweet | null;
+  user: User;
+}
+
+export interface User {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+}
+
+export interface TweetListResponse {
+  next: string | null;
+  results: Tweet[];
 }
 
 export type TweetsCallback = (response: Tweet[], status: number) => void;
+export type TweetListCallback = (
+  response: TweetListResponse,
+  status: number
+) => void;
 export type TweetCreateCallback = (response: Tweet, status: number) => void;
 
 function getCookie(name: string) {
@@ -55,8 +72,9 @@ export function backendLookup<T>(
     if (xhr.status === 403 && xhr.response) {
       const detail = xhr.response.detail;
       if (detail === xhr.response.detail) {
-        window.location.href =
-          "http://localhost:8000/login?showLoginRequired=true";
+        if (window.location.href.indexOf("login") === -1)
+          window.location.href =
+            "http://localhost:8000/login?showLoginRequired=true";
       }
     }
     callback(xhr.response as T, xhr.status);
