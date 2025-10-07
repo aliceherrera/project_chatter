@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
+import { ProfileBadgeComponent } from "./Components/ProfileBadge";
 import TweetsComponent, {
   TweetDetailComponent,
   FeedComponent,
@@ -39,6 +40,18 @@ Array.from(tweetDetailElements).forEach((container) => {
         tweetId={container.dataset.tweetId!}
         className={container.dataset.className}
       />
+    );
+  }
+});
+
+const userProfileBadgeElements = document.getElementsByClassName(
+  "chatter-profile-badge"
+);
+Array.from(userProfileBadgeElements).forEach((container) => {
+  if (container instanceof HTMLElement) {
+    const root = createRoot(container);
+    root.render(
+      <ProfileBadgeComponent username={container.dataset.username!} />
     );
   }
 });

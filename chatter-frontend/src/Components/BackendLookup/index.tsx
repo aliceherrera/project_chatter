@@ -14,6 +14,11 @@ export interface User {
   username: string;
   first_name: string;
   last_name: string;
+  is_following: boolean;
+  follower_count: number;
+  following_count: number;
+  bio: string;
+  location: string;
 }
 
 export interface TweetListResponse {
@@ -54,6 +59,7 @@ export function backendLookup<T>(
   if (data) {
     jsonData = JSON.stringify(data);
   }
+
   const xhr = new XMLHttpRequest();
   const url = `http://localhost:8000/api${endpoint}`;
   xhr.responseType = "json";
